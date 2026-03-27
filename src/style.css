@@ -1,0 +1,147 @@
+/* ── Google Fonts : Syne + Inter ────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── FA SVG core ─────────────────────────────────────────────────── */
+svg:not(:root).svg-inline--fa { overflow: visible; }
+
+/* ── Base ───────────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply m-0 font-sans bg-white text-ink-800 antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-mint-500 rounded;
+  }
+
+  button, a { touch-action: manipulation; }
+}
+
+/* ── Composants réutilisables ───────────────────────────────────── */
+@layer components {
+
+  /* ── Carte principale blanche ── */
+  .card {
+    @apply bg-white border border-black/[0.06] rounded-3xl shadow-card;
+  }
+
+  /* ── Boutons ── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2
+           font-bold text-sm
+           min-h-[52px] px-7
+           rounded-full
+           transition-all duration-200 active:scale-[0.96];
+  }
+
+  .btn-primary {
+    @apply btn text-white bg-mint-500 shadow-btn-mint;
+    &:hover  { @apply bg-mint-600; }
+    &:active { @apply brightness-95; }
+  }
+
+  .btn-lavande {
+    @apply btn text-white bg-lavande-500 shadow-btn-lavande;
+  }
+
+  .btn-ghost {
+    @apply btn bg-ink-50 text-ink-600 border border-ink-100;
+  }
+
+  /* ── Input ── */
+  .input {
+    @apply w-full px-5 py-4 text-sm text-ink-800
+           bg-ink-50 border-[1.5px] border-transparent rounded-2xl
+           placeholder:text-ink-300 min-h-[52px]
+           focus:outline-none focus:bg-white focus:border-mint-500
+           focus:shadow-[0_0_0_4px_rgba(45,154,94,0.10)]
+           transition-all duration-200;
+  }
+
+  /* ── Chip filtre ── */
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-4 py-2 rounded-full
+           text-xs font-bold select-none cursor-pointer
+           transition-all duration-200 active:scale-95 min-h-[36px];
+  }
+  .chip-on  { @apply chip text-white bg-ink-800 shadow-sm; }
+  .chip-off { @apply chip bg-ink-50 text-ink-400 border border-ink-100; }
+
+  /* ── Labels ── */
+  .eyebrow {
+    @apply text-2xs font-bold uppercase tracking-[0.14em] text-ink-600;
+  }
+  .section-title {
+    @apply font-display text-2xl font-bold text-ink-800 leading-tight tracking-tight;
+  }
+
+  /* ── Separator ── */
+  .sep { @apply h-px bg-ink-100; }
+
+  /* ── Badges pastels ── */
+  .badge-mint    { @apply bg-mint-100 text-mint-700; }
+  .badge-lavande { @apply bg-lavande-100 text-lavande-700; }
+  .badge-peche   { @apply bg-peche-100 text-peche-700; }
+  .badge-soleil  { @apply bg-soleil-100 text-soleil-700; }
+
+  /* ── Badges difficulté (remède detail) ── */
+  .badge-debutant      { @apply bg-mint-100 text-mint-700; }
+  .badge-intermediaire { @apply bg-soleil-100 text-soleil-700; }
+  .badge-avance        { @apply bg-peche-100 text-peche-700; }
+}
+
+/* ── Transitions de page ────────────────────────────────────────── */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.18s cubic-bezier(0.4,0,0.2,1);
+}
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+
+.slide-up-enter-active {
+  transition: all 0.38s cubic-bezier(0.16,1,0.3,1);
+}
+.slide-up-leave-active {
+  transition: all 0.22s cubic-bezier(0.4,0,1,1);
+}
+.slide-up-enter-from  { opacity:0; transform: translateY(24px); }
+.slide-up-leave-to    { opacity:0; transform: translateY(-8px); }
+
+/* ── Accessibilité : respect des préférences d'animation ───────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Utilitaires ────────────────────────────────────────────────── */
+@layer utilities {
+  .scroll-hide { -ms-overflow-style:none; scrollbar-width:none; }
+  .scroll-hide::-webkit-scrollbar { display:none; }
+  .text-shadow { text-shadow: 0 1px 6px rgba(0,0,0,0.55), 0 0px 2px rgba(0,0,0,0.4); }
+  .scroll-snap-x { scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; }
+
+  .line-clamp-2 {
+    display:-webkit-box; -webkit-line-clamp:2;
+    -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .line-clamp-3 {
+    display:-webkit-box; -webkit-line-clamp:3;
+    -webkit-box-orient:vertical; overflow:hidden;
+  }
+}

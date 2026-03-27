@@ -1,0 +1,71 @@
+/**
+ * Suggestions bien-être — 7 entrées, une par jour de la semaine
+ * Sélection : suggestions[new Date().getDay()]  (0 = Dimanche)
+ */
+import type { SuggestionDuJour } from '@/types'
+
+export const suggestions: SuggestionDuJour[] = [
+  /* 0 — Dimanche */
+  {
+    id: 'sug-0',
+    remedeId: 'medi-pleine-conscience-5min',
+    titre: 'Dimanche en pleine conscience 🧘',
+    message: 'Commencez votre dimanche avec 5 minutes de méditation pour poser les bases d\'une semaine sereine.',
+    heure: 'Matin',
+    couleurFond: 'bg-lavande-100',
+  },
+  /* 1 — Lundi */
+  {
+    id: 'sug-1',
+    remedeId: 'sopho-respiration-478',
+    titre: 'Commencez la semaine en douceur ✨',
+    message: '2 minutes de respiration 4-7-8 pour démarrer lundi avec calme et clarté.',
+    heure: 'Matin',
+    couleurFond: 'bg-mint-100',
+  },
+  /* 2 — Mardi */
+  {
+    id: 'sug-2',
+    remedeId: 'aroma-menthe-concentration',
+    titre: 'Boost de concentration 🌿',
+    message: 'La menthe poivrée stimule votre vigilance mentale pour une matinée productive.',
+    heure: 'Matin',
+    couleurFond: 'bg-mint-100',
+  },
+  /* 3 — Mercredi */
+  {
+    id: 'sug-3',
+    remedeId: 'phyto-camomille-digestion',
+    titre: 'Pause digestive 🍵',
+    message: 'Après le déjeuner, une tisane de camomille pour une digestion sereine et légère.',
+    heure: 'Après-midi',
+    couleurFond: 'bg-soleil-100',
+  },
+  /* 4 — Jeudi */
+  {
+    id: 'sug-4',
+    remedeId: 'acupression-yintang-calme',
+    titre: 'Point anti-stress 👐',
+    message: 'Appuyez sur Yintang pour calmer l\'agitation mentale en quelques minutes.',
+    heure: 'Journée',
+    couleurFond: 'bg-peche-100',
+  },
+  /* 5 — Vendredi */
+  {
+    id: 'sug-5',
+    remedeId: 'nutri-golden-milk',
+    titre: 'Finissez la semaine en or 🌟',
+    message: 'Préparez un golden milk anti-inflammatoire pour une soirée de vendredi apaisante.',
+    heure: 'Soir',
+    couleurFond: 'bg-soleil-100',
+  },
+  /* 6 — Samedi */
+  {
+    id: 'sug-6',
+    remedeId: 'aroma-lavande-sommeil',
+    titre: 'Week-end ressourçant 🌙',
+    message: 'Ce soir, laissez la lavande vous accompagner vers un sommeil profondément réparateur.',
+    heure: 'Soir',
+    couleurFond: 'bg-lavande-100',
+  },
+]

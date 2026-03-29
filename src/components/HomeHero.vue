@@ -16,6 +16,7 @@ const prenom  = computed(() => store.profil?.prenom || null)
 const dateStr = computed(() =>
   new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())
 )
+
 </script>
 
 <template>
@@ -49,18 +50,11 @@ const dateStr = computed(() =>
     </div>
 
     <!-- Salutation -->
-    <div class="mb-5">
-      <p class="text-ink-400 text-[11px] font-semibold uppercase tracking-widest mb-1.5">{{ dateStr }}</p>
-      <h1 class="font-display text-3xl font-bold text-ink-800 leading-tight tracking-tight">
+    <div>
+      <p class="text-ink-400 text-[11px] font-semibold uppercase tracking-widest mb-1">{{ dateStr }}</p>
+      <h1 class="font-display text-2xl font-bold text-ink-800 leading-tight tracking-tight">
         {{ salut }}<template v-if="prenom">, {{ prenom }}</template> 👋
       </h1>
-      <p class="text-ink-500 text-sm mt-1">Prenez soin de vous aujourd'hui.</p>
-    </div>
-
-    <!-- Citation du jour -->
-    <div class="rounded-2xl bg-ink-50 px-4 py-3.5 border border-ink-100">
-      <p class="eyebrow mb-1">Sagesse du jour</p>
-      <p class="text-sm font-semibold text-ink-700 leading-relaxed">"{{ store.citationDuJour }}"</p>
     </div>
 
     <!-- Banner onboarding -->

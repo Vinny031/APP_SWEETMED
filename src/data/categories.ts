@@ -92,8 +92,8 @@ export const categories: Categorie[] = [
     description: 'Astuces de grand-mère pour les petits bobos du quotidien',
     couleur: 'bg-peche-100',
     couleurTexte: 'text-peche-700',
-    icone: 'kit-medical',
-    emoji: '🩹',
+    icone: 'briefcase-medical',
+    emoji: '🚑',
     image: `${base}icons/icon_bobos.webp`,
   },
 ]

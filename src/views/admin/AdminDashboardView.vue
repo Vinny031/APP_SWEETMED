@@ -2,11 +2,13 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMedecineStore } from '@/stores/useMedecineStore'
+import { useAuthStore } from '@/stores/useAuthStore'
 import { remedeService } from '@/services/remedeService'
 import { categorieService } from '@/services/categorieService'
 
 const router = useRouter()
 const store  = useMedecineStore()
+const auth   = useAuthStore()
 
 const stats = computed(() => store.statistiques)
 
@@ -16,10 +18,6 @@ const totalCustomRemedes = computed(() =>
 const totalCustomCategories = computed(() =>
   store.categories.filter(c => categorieService.estCustom(c.id)).length
 )
-
-const maxCount = computed(() =>
-  Math.max(...stats.value.remederParCategorie.map(i => i.count), 1)
-)
 </script>
 
 <template>
@@ -28,10 +26,10 @@ const maxCount = computed(() =>
     <!-- ══ Header ══════════════════════════════════════════════════ -->
     <header class="px-5 pb-5 bg-white border-b border-ink-100 pt-safe-header-md flex items-center gap-3">
       <fa :icon="['fas','gear']" class="text-ink-800 text-4xl shrink-0" />
-      <div class="flex-1">
-        <p class="eyebrow mb-0">Administrateur</p>
+      <div class="flex-1 min-w-0">
+        <p class="eyebrow mb-0 truncate">{{ auth.prenom || auth.session?.email }}</p>
         <h1 class="font-display text-2xl font-bold text-ink-800 leading-tight tracking-tight">
-          Administration
+          Espace admin
         </h1>
       </div>
       <button
@@ -43,44 +41,15 @@ const maxCount = computed(() =>
     </header>
 
     <!-- ══ Contenu ═════════════════════════════════════════════════ -->
-    <div class="px-5 pt-5 pb-6 space-y-6">
+    <div class="px-5 pt-5 pb-8 space-y-6">
 
-      <!-- ── Actions rapides ───────────────────────────────────── -->
-      <section>
-        <p class="eyebrow mb-3">Actions rapides</p>
-        <div class="grid grid-cols-2 gap-2.5">
-          <button
-            class="rounded-2xl bg-white border border-ink-100 shadow-card flex flex-col items-center gap-2.5 px-4 py-5 active:bg-ink-50 transition-colors"
-            @click="router.push('/admin/remedes/nouveau')"
-          >
-            <div class="w-10 h-10 rounded-xl bg-mint-50 flex items-center justify-center">
-              <fa :icon="['fas','plus']" class="text-mint-600" />
-            </div>
-            <span class="text-xs font-semibold text-ink-700 text-center leading-tight">Nouveau remède</span>
-          </button>
-          <button
-            class="rounded-2xl bg-white border border-ink-100 shadow-card flex flex-col items-center gap-2.5 px-4 py-5 active:bg-ink-50 transition-colors"
-            @click="router.push('/admin/categories/nouvelle')"
-          >
-            <div class="w-10 h-10 rounded-xl bg-lavande-100 flex items-center justify-center">
-              <fa :icon="['fas','plus']" class="text-lavande-500" />
-            </div>
-            <span class="text-xs font-semibold text-ink-700 text-center leading-tight">Nouvelle catégorie</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- ── KPIs principaux ────────────────────────────────────── -->
+      <!-- ── KPIs ─────────────────────────────────────────────────── -->
       <section>
         <p class="eyebrow mb-3">Vue d'ensemble</p>
         <div class="grid grid-cols-2 gap-2.5">
 
-          <!-- Remèdes -->
-          <button
-            class="rounded-2xl bg-white border border-ink-100 shadow-card p-4 text-left active:bg-ink-50 transition-colors"
-            @click="router.push('/admin/remedes')"
-          >
-            <div class="w-8 h-8 rounded-lg bg-mint-50 flex items-center justify-center mb-3">
+          <div class="rounded-2xl bg-mint-50 border border-mint-100 p-4">
+            <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center mb-3">
               <fa :icon="['fas','book-open']" class="text-mint-600 text-xs" />
             </div>
             <p class="font-display font-bold text-3xl text-ink-900 leading-none">{{ stats.totalRemedes }}</p>
@@ -88,14 +57,10 @@ const maxCount = computed(() =>
             <p v-if="totalCustomRemedes > 0" class="text-xs text-mint-600 font-semibold mt-0.5">
               +{{ totalCustomRemedes }} ajoutés
             </p>
-          </button>
+          </div>
 
-          <!-- Catégories -->
-          <button
-            class="rounded-2xl bg-white border border-ink-100 shadow-card p-4 text-left active:bg-ink-50 transition-colors"
-            @click="router.push('/admin/categories')"
-          >
-            <div class="w-8 h-8 rounded-lg bg-lavande-100 flex items-center justify-center mb-3">
+          <div class="rounded-2xl bg-lavande-50 border border-lavande-100 p-4">
+            <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center mb-3">
               <fa :icon="['fas','tags']" class="text-lavande-500 text-xs" />
             </div>
             <p class="font-display font-bold text-3xl text-ink-900 leading-none">{{ stats.totalCategories }}</p>
@@ -103,43 +68,108 @@ const maxCount = computed(() =>
             <p v-if="totalCustomCategories > 0" class="text-xs text-lavande-500 font-semibold mt-0.5">
               +{{ totalCustomCategories }} ajoutées
             </p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Gérer ─────────────────────────────────────────────────── -->
+      <section>
+        <p class="eyebrow mb-3">Gérer</p>
+        <div class="rounded-2xl bg-white border border-ink-100 shadow-card overflow-hidden divide-y divide-ink-50">
+
+          <!-- Remèdes -->
+          <button
+            class="w-full flex items-center gap-3.5 px-4 py-3.5 min-h-[56px] active:bg-ink-50 transition-colors text-left"
+            @click="router.push('/admin/remedes')"
+          >
+            <div class="w-9 h-9 rounded-xl bg-mint-50 flex items-center justify-center flex-shrink-0">
+              <fa :icon="['fas','book-open']" class="text-mint-600 text-sm" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-ink-800">Remèdes</p>
+              <p class="text-xs text-ink-400">Ajouter, modifier, supprimer</p>
+            </div>
+            <fa :icon="['fas','chevron-right']" class="text-ink-300 text-xs flex-shrink-0" />
+          </button>
+
+          <!-- Catégories -->
+          <button
+            class="w-full flex items-center gap-3.5 px-4 py-3.5 min-h-[56px] active:bg-ink-50 transition-colors text-left"
+            @click="router.push('/admin/categories')"
+          >
+            <div class="w-9 h-9 rounded-xl bg-lavande-100 flex items-center justify-center flex-shrink-0">
+              <fa :icon="['fas','tags']" class="text-lavande-500 text-sm" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-ink-800">Catégories</p>
+              <p class="text-xs text-ink-400">Organiser le contenu</p>
+            </div>
+            <fa :icon="['fas','chevron-right']" class="text-ink-300 text-xs flex-shrink-0" />
+          </button>
+
+          <!-- Nouveau remède -->
+          <button
+            class="w-full flex items-center gap-3.5 px-4 py-3.5 min-h-[56px] active:bg-ink-50 transition-colors text-left"
+            @click="router.push('/admin/remedes/nouveau')"
+          >
+            <div class="w-9 h-9 rounded-xl bg-peche-50 flex items-center justify-center flex-shrink-0">
+              <fa :icon="['fas','plus']" class="text-peche-500 text-sm" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-ink-800">Nouveau remède</p>
+              <p class="text-xs text-ink-400">Créer une nouvelle fiche</p>
+            </div>
+            <fa :icon="['fas','chevron-right']" class="text-ink-300 text-xs flex-shrink-0" />
+          </button>
+
+          <!-- Nouvelle catégorie -->
+          <button
+            class="w-full flex items-center gap-3.5 px-4 py-3.5 min-h-[56px] active:bg-ink-50 transition-colors text-left"
+            @click="router.push('/admin/categories/nouvelle')"
+          >
+            <div class="w-9 h-9 rounded-xl bg-soleil-100 flex items-center justify-center flex-shrink-0">
+              <fa :icon="['fas','tags']" class="text-soleil-600 text-sm" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-ink-800">Nouvelle catégorie</p>
+              <p class="text-xs text-ink-400">Créer une catégorie</p>
+            </div>
+            <fa :icon="['fas','chevron-right']" class="text-ink-300 text-xs flex-shrink-0" />
           </button>
 
         </div>
       </section>
 
-      <!-- ── Répartition par catégorie ──────────────────────────── -->
+      <!-- ── Répartition ───────────────────────────────────────────── -->
       <section>
         <p class="eyebrow mb-3">Répartition</p>
         <div class="rounded-2xl bg-white border border-ink-100 shadow-card overflow-hidden divide-y divide-ink-50">
-          <button
+          <div
             v-for="item in stats.remederParCategorie"
             :key="item.categorie.id"
-            class="w-full px-5 py-3.5 min-h-[44px] text-left active:bg-ink-50 transition-colors"
-            @click="router.push(`/admin/remedes?categorie=${item.categorie.id}`)"
+            class="flex items-center gap-3 px-4 py-3 min-h-[44px]"
           >
-            <div class="flex items-center justify-between mb-1.5">
-              <div class="flex items-center gap-2">
-                <span class="text-sm leading-none">{{ item.categorie.emoji }}</span>
-                <span class="text-sm font-medium text-ink-700">{{ item.categorie.nom }}</span>
-              </div>
-              <span
-                class="text-xs font-bold px-2 py-0.5 rounded-full"
-                :class="item.categorie.couleur + ' ' + item.categorie.couleurTexte"
-              >{{ item.count }}</span>
-            </div>
-            <!-- Barre de progression -->
-            <div class="h-1.5 rounded-full bg-ink-100 overflow-hidden">
-              <div
-                class="h-full rounded-full transition-all duration-500"
-                :class="item.categorie.couleur.replace('bg-', 'bg-').replace('-100', '-300').replace('-50', '-200')"
-                :style="{ width: maxCount > 0 ? `${(item.count / maxCount) * 100}%` : '0%' }"
+            <div
+              class="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0"
+              :class="item.categorie.image ? '' : [item.categorie.couleur, item.categorie.couleurTexte]"
+            >
+              <img
+                v-if="item.categorie.image"
+                :src="item.categorie.image"
+                :alt="item.categorie.nom"
+                class="w-full h-full object-cover"
               />
+              <span v-else class="font-display font-bold text-xs">{{ item.categorie.nom[0].toUpperCase() }}</span>
             </div>
-          </button>
+            <span class="flex-1 text-sm font-medium text-ink-700 truncate">{{ item.categorie.nom }}</span>
+            <span
+              class="text-xs font-bold px-2.5 py-1 rounded-full flex-shrink-0"
+              :class="item.categorie.couleur + ' ' + item.categorie.couleurTexte"
+            >{{ item.count }}</span>
+          </div>
         </div>
       </section>
-
 
     </div>
   </div>

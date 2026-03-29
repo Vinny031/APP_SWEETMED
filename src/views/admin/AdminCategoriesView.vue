@@ -117,12 +117,18 @@ const nbRemedes = (catId: string) =>
         class="rounded-2xl bg-white border border-ink-100 shadow-sm overflow-hidden"
       >
         <div class="flex items-center gap-3 px-4 py-3.5">
-          <!-- Emoji + badge couleur -->
+          <!-- Image ou initiale -->
           <div
-            class="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
-            :class="cat.couleur"
+            class="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0"
+            :class="cat.image ? '' : [cat.couleur, cat.couleurTexte]"
           >
-            {{ cat.emoji }}
+            <img
+              v-if="cat.image"
+              :src="cat.image"
+              :alt="cat.nom"
+              class="w-full h-full object-cover"
+            />
+            <span v-else class="font-display font-bold text-base">{{ cat.nom[0].toUpperCase() }}</span>
           </div>
 
           <!-- Infos -->

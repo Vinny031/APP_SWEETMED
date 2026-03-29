@@ -14,8 +14,7 @@ import type {
   CategorieId,
   ResultatRecherche,
 } from '@/types'
-import { categories as categoriesMock } from '@/data/categories'
-import { suggestions as suggestionsMock } from '@/data/suggestions'
+import { suggestions as suggestionsFallback } from '@/data/suggestions'
 import { citations } from '@/data/citations'
 import { remedeService } from '@/services/remedeService'
 import { categorieService } from '@/services/categorieService'
@@ -33,10 +32,10 @@ export const useMedecineStore = defineStore('medecine', () => {
   const remedes = ref<Remede[]>([])
 
   /** Liste des catégories disponibles (mock + custom fusionnées via categorieService) */
-  const categories = ref<Categorie[]>(categoriesMock)
+  const categories = ref<Categorie[]>([])
 
   /** Suggestions du jour */
-  const suggestions = ref<SuggestionDuJour[]>(suggestionsMock)
+  const suggestions = ref<SuggestionDuJour[]>(suggestionsFallback)
 
   /** Favoris de l'utilisateur (persistés en localStorage) */
   const favoris = ref<Favori[]>(_chargerFavoris())
@@ -253,11 +252,26 @@ export const useMedecineStore = defineStore('medecine', () => {
    */
   async function initialiser(): Promise<void> {
     chargement.value = true
-    ;[remedes.value, categories.value] = await Promise.all([
+    const [r, c, s] = await Promise.all([
       remedeService.getAll(),
       categorieService.getAll(),
+      _chargerSuggestions(),
     ])
+    remedes.value    = r
+    categories.value = c
+    suggestions.value = s
     chargement.value = false
+  }
+
+  /** Charge les suggestions depuis public/data, fallback sur l'import TS. */
+  async function _chargerSuggestions(): Promise<SuggestionDuJour[]> {
+    try {
+      const res = await fetch(`${import.meta.env.BASE_URL}data/suggestions.json`)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      return (await res.json()) as SuggestionDuJour[]
+    } catch {
+      return suggestionsFallback
+    }
   }
 
   /** Crée un nouveau remède (admin uniquement). */

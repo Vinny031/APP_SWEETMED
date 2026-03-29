@@ -1,16 +1,51 @@
 /**
  * categorieService — SWEET MED
- * CRUD catégories : fusionne les données mock (statiques) avec les catégories
+ * CRUD catégories : fusionne les données mock (JSON public/) avec les catégories
  * créées/modifiées par l'admin (localStorage sweetmed_categories_custom).
- * Migration Netlify : remplacer _loadCustom/_saveCustom par des fetch().
+ *
+ * Chargement des mocks :
+ *  1. fetch('/data/categories.json') — CDN Netlify en prod, Vite en dev
+ *  2. Fallback sur l'import TS local — mode offline / Capacitor
+ *
+ * Le champ `image` du JSON stocke un chemin relatif (ex: "icons/icon_arom.webp").
+ * BASE_URL est préfixé au chargement pour garantir la compatibilité dev/prod/Capacitor.
+ *
+ * Migration Netlify : remplacer _loadCustom/_saveCustom par des fetch() vers
+ * une Netlify Function + DB.
  */
 import type { Categorie } from '@/types'
-import { categories as categoriesMock } from '@/data/categories'
+import { categories as categoriesFallback } from '@/data/categories'
 
-const CUSTOM_KEY   = 'sweetmed_categories_custom'
-const DELETED_KEY  = 'sweetmed_categories_deleted'
+const CUSTOM_KEY  = 'sweetmed_categories_custom'
+const DELETED_KEY = 'sweetmed_categories_deleted'
+
+// ── Chargement des données mock ──────────────────────────────────
+
+/** Cache en mémoire pour éviter de re-fetcher à chaque appel. */
+let _mockCache: Categorie[] | null = null
+
+async function _loadMock(): Promise<Categorie[]> {
+  if (_mockCache) return _mockCache
+
+  try {
+    const base = import.meta.env.BASE_URL
+    const res = await fetch(`${base}data/categories.json`)
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const raw = (await res.json()) as Categorie[]
+    // Réinjecter BASE_URL sur les chemins d'images relatifs
+    _mockCache = raw.map(cat =>
+      cat.image ? { ...cat, image: `${base}${cat.image}` } : cat
+    )
+    return _mockCache
+  } catch {
+    // Fallback offline / Capacitor
+    _mockCache = categoriesFallback
+    return _mockCache
+  }
+}
 
 // ── Helpers localStorage (privés) ────────────────────────────────
+
 function _loadCustom(): Categorie[] {
   try {
     const raw = localStorage.getItem(CUSTOM_KEY)
@@ -40,11 +75,14 @@ function _addDeleted(id: string): void {
 
 /** Retourne toutes les catégories (mock filtrées + custom fusionnées). */
 async function getAll(): Promise<Categorie[]> {
-  const custom  = _loadCustom()
-  const deleted = _loadDeleted()
+  const [mock, custom, deleted] = await Promise.all([
+    _loadMock(),
+    Promise.resolve(_loadCustom()),
+    Promise.resolve(_loadDeleted()),
+  ])
   // Les catégories custom écrasent les mocks du même id (édition d'un mock)
   // Les mocks supprimés par l'admin sont exclus
-  const mockFiltres = categoriesMock.filter(m =>
+  const mockFiltres = mock.filter(m =>
     !custom.some(c => c.id === m.id) && !deleted.includes(m.id)
   )
   return [...mockFiltres, ...custom]
@@ -86,9 +124,10 @@ async function update(id: string, patch: Partial<Categorie>): Promise<Categorie 
   }
 
   // Édition d'un mock : cloner dans custom
-  const mock = categoriesMock.find(c => c.id === id)
-  if (!mock) return null
-  const updated: Categorie = { ...mock, ...patch }
+  const mock = await _loadMock()
+  const mockItem = mock.find(c => c.id === id)
+  if (!mockItem) return null
+  const updated: Categorie = { ...mockItem, ...patch }
   _saveCustom([...custom, updated])
   return updated
 }
@@ -103,13 +142,13 @@ async function remove(id: string): Promise<boolean> {
   const filtres = custom.filter(c => c.id !== id)
 
   if (filtres.length < custom.length) {
-    // Catégorie custom supprimée
     _saveCustom(filtres)
     return true
   }
 
   // Catégorie mock : vérifier qu'elle existe avant de la blacklister
-  const estUnMock = categoriesMock.some(c => c.id === id)
+  const mock = await _loadMock()
+  const estUnMock = mock.some(c => c.id === id)
   if (!estUnMock) return false
   _addDeleted(id)
   return true

@@ -1,15 +1,42 @@
 /**
  * remedeService — SWEET MED
- * CRUD remèdes : fusionne les données mock (statiques) avec les remèdes
+ * CRUD remèdes : fusionne les données mock (JSON public/) avec les remèdes
  * créés/modifiés par l'admin (localStorage sweetmed_remedes_custom).
- * Migration Netlify : remplacer _loadCustom/_saveCustom par des fetch().
+ *
+ * Chargement des mocks :
+ *  1. fetch('/data/remedes.json') — CDN Netlify en prod, Vite en dev
+ *  2. Fallback sur l'import TS local — mode offline / Capacitor
+ *
+ * Migration Netlify : remplacer _loadCustom/_saveCustom par des fetch() vers
+ * une Netlify Function + DB.
  */
 import type { Remede } from '@/types'
-import { remedes as remedesMock } from '@/data/remedes'
+import { remedes as remedesFallback } from '@/data/remedes'
 
 const CUSTOM_KEY = 'sweetmed_remedes_custom'
 
+// ── Chargement des données mock ──────────────────────────────────
+
+/** Cache en mémoire pour éviter de re-fetcher à chaque appel. */
+let _mockCache: Remede[] | null = null
+
+async function _loadMock(): Promise<Remede[]> {
+  if (_mockCache) return _mockCache
+
+  try {
+    const res = await fetch(`${import.meta.env.BASE_URL}data/remedes.json`)
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    _mockCache = (await res.json()) as Remede[]
+    return _mockCache
+  } catch {
+    // Fallback offline / Capacitor
+    _mockCache = remedesFallback
+    return _mockCache
+  }
+}
+
 // ── Helpers localStorage (privés) ────────────────────────────────
+
 function _loadCustom(): Remede[] {
   try {
     const raw = localStorage.getItem(CUSTOM_KEY)
@@ -25,9 +52,9 @@ function _saveCustom(remedes: Remede[]): void {
 
 /** Retourne tous les remèdes (mock filtrés + custom fusionnés). */
 async function getAll(): Promise<Remede[]> {
-  const custom = _loadCustom()
+  const [mock, custom] = await Promise.all([_loadMock(), Promise.resolve(_loadCustom())])
   // Les remèdes custom écrasent les mocks du même id (édition d'un mock)
-  const mockFiltres = remedesMock.filter(m => !custom.some(c => c.id === m.id))
+  const mockFiltres = mock.filter(m => !custom.some(c => c.id === m.id))
   return [...mockFiltres, ...custom]
 }
 
@@ -64,9 +91,10 @@ async function update(id: string, patch: Partial<Remede>): Promise<Remede | null
   }
 
   // Édition d'un remède mock : cloner dans custom
-  const mock = remedesMock.find(r => r.id === id)
-  if (!mock) return null
-  const updated: Remede = { ...mock, ...patch }
+  const mock = await _loadMock()
+  const mockItem = mock.find(r => r.id === id)
+  if (!mockItem) return null
+  const updated: Remede = { ...mockItem, ...patch }
   _saveCustom([...custom, updated])
   return updated
 }

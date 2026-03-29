@@ -39,6 +39,8 @@ import {
   faEyeSlash,
   faGear,
   faTags,
+  faImage,
+  faArrowUpFromBracket,
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -51,7 +53,7 @@ library.add(
   // Auth + Admin
   faShieldHalved, faPlus, faPen, faRightFromBracket,
   faLock, faEnvelope, faChartBar, faEye, faEyeSlash, faGear,
-  faTags,
+  faTags, faImage, faArrowUpFromBracket,
 )
 
 export { FontAwesomeIcon }

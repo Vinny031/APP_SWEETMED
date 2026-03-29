@@ -26,7 +26,7 @@ const dateStr = computed(() =>
     <div class="flex items-center justify-between mb-5">
       <div class="flex items-center gap-2.5">
         <div class="w-12 h-12 rounded-2xl overflow-hidden shrink-0">
-          <img src="/icons/favicon.webp" alt="SWEET MED" class="w-full h-full object-cover" />
+          <img src="/icons/favicon.webp" alt="SWEET MED" class="w-full h-full object-cover" width="48" height="48" />
         </div>
         <span class="font-display font-bold text-ink-800 text-base tracking-tight">SWEET MED</span>
       </div>

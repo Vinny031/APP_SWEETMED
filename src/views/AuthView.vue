@@ -41,6 +41,8 @@ async function soumettre() {
         src="/icons/favicon.webp"
         alt="SWEET MED"
         class="w-20 h-20 rounded-3xl mx-auto mb-4 object-cover shadow-btn-mint"
+        width="80"
+        height="80"
       />
       <h1 class="font-display font-bold text-ink-800 text-2xl tracking-tight">
         SWEET MED

@@ -15,6 +15,7 @@ import {
   faBell,
   faChevronLeft,
   faChevronRight,
+  faChevronDown,
   faArrowRight,
   faLeaf,
   faCircleCheck,
@@ -46,7 +47,7 @@ import {
 library.add(
   faHouse, faCompass, faHeart, faUser,
   faMagnifyingGlass, faXmark, faBell,
-  faChevronLeft, faChevronRight, faArrowRight,
+  faChevronLeft, faChevronRight, faChevronDown, faArrowRight,
   faLeaf, faCircleCheck, faListOl, faTriangleExclamation,
   faBolt, faWandMagicSparkles, faRotateLeft, faFloppyDisk,
   faTrash, faBookOpen, faClock,

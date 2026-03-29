@@ -33,12 +33,6 @@ export interface Categorie {
 }
 
 // ─────────────────────────────────────────────
-// Niveaux de difficulté / facilité d'accès
-// ─────────────────────────────────────────────
-
-export type NiveauDifficulte = 'debutant' | 'intermediaire' | 'avance'
-
-// ─────────────────────────────────────────────
 // Remède — entité principale de l'application
 // ─────────────────────────────────────────────
 
@@ -52,7 +46,6 @@ export interface Remede {
   categorieId: CategorieId
   tags: string[]               // mots-clés pour la recherche
   duree?: string               // ex: "10 min", "3 semaines"
-  difficulte: NiveauDifficulte
   ingredients?: string[]       // plantes, huiles, etc.
   etapes?: string[]            // instructions pas à pas
   precautions?: string[]       // contre-indications

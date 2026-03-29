@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMedecineStore } from '@/stores/useMedecineStore'
-import type { CategorieId, NiveauDifficulte } from '@/types'
+import type { CategorieId, Categorie } from '@/types'
 
 interface Props { id?: string }
 const props = defineProps<Props>()
@@ -19,7 +19,6 @@ const titre       = ref('')
 const description = ref('')
 const contenu     = ref('')
 const categorieId = ref<CategorieId>('phytotherapie')
-const difficulte  = ref<NiveauDifficulte>('debutant')
 const duree       = ref('')
 // Champs multi-valeurs (saisis en texte, séparés par une nouvelle ligne)
 const benefices   = ref('')
@@ -29,6 +28,10 @@ const ingredients = ref('')
 const tags        = ref('')
 
 const categories  = computed(() => store.categories)
+const categorieSelectionnee = computed<Categorie | undefined>(() =>
+  categories.value.find(c => c.id === categorieId.value)
+)
+const categorieDropdownOuvert = ref(false)
 
 // ── Préremplissage en mode édition ────────────────────────────
 onMounted(() => {
@@ -39,7 +42,6 @@ onMounted(() => {
   description.value = remede.description
   contenu.value     = remede.contenu
   categorieId.value = remede.categorieId
-  difficulte.value  = remede.difficulte
   duree.value       = remede.duree ?? ''
   benefices.value   = remede.benefices.join('\n')
   etapes.value      = remede.etapes?.join('\n') ?? ''
@@ -73,7 +75,6 @@ async function sauvegarder() {
     description: description.value.trim(),
     contenu:     contenu.value.trim(),
     categorieId: categorieId.value,
-    difficulte:  difficulte.value,
     duree:       duree.value.trim() || undefined,
     benefices:   lignesNonVides(benefices.value),
     etapes:      lignesNonVides(etapes.value).length ? lignesNonVides(etapes.value) : undefined,
@@ -164,28 +165,62 @@ async function sauvegarder() {
       <section class="rounded-3xl p-5 bg-white border border-ink-100 shadow-sm space-y-4">
         <h2 class="font-bold text-ink-700 text-sm">Classification</h2>
 
+        <!-- Sélecteur catégorie custom -->
         <div>
-          <label class="eyebrow mb-1.5 block" for="f-categorie">Catégorie</label>
-          <select id="f-categorie" v-model="categorieId" class="input">
-            <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-              {{ cat.emoji }} {{ cat.nom }}
-            </option>
-          </select>
+          <label class="eyebrow mb-1.5 block">Catégorie</label>
+          <div class="relative">
+            <!-- Bouton déclencheur -->
+            <button
+              type="button"
+              class="w-full flex items-center gap-3 rounded-2xl border border-ink-100 overflow-hidden min-h-[52px] text-left shadow-sm"
+              @click="categorieDropdownOuvert = !categorieDropdownOuvert"
+            >
+              <!-- Vignette couleur/image -->
+              <span
+                class="flex-shrink-0 w-12 h-12 flex items-center justify-center overflow-hidden"
+                :class="categorieSelectionnee?.couleur ?? 'bg-ink-50'"
+              >
+                <img v-if="categorieSelectionnee?.image" :src="categorieSelectionnee.image" class="w-full h-full object-cover" alt="" />
+                <span v-else class="font-bold text-base" :class="categorieSelectionnee?.couleurTexte ?? 'text-ink-500'">
+                  {{ categorieSelectionnee?.nom?.[0]?.toUpperCase() ?? '?' }}
+                </span>
+              </span>
+              <span class="flex-1 px-1 font-medium text-ink-800 text-sm">
+                {{ categorieSelectionnee?.nom ?? 'Choisir…' }}
+              </span>
+              <fa :icon="['fas','chevron-down']" class="text-xs text-ink-400 mr-3 transition-transform" :class="{ 'rotate-180': categorieDropdownOuvert }" />
+            </button>
+
+            <!-- Liste déroulante -->
+            <Transition name="fade">
+              <ul
+                v-if="categorieDropdownOuvert"
+                class="absolute z-20 left-0 right-0 mt-1 bg-white border border-ink-100 rounded-2xl shadow-lg overflow-hidden"
+              >
+                <li
+                  v-for="cat in categories"
+                  :key="cat.id"
+                  class="flex items-center gap-3 cursor-pointer hover:bg-ink-50 transition-colors min-h-[44px]"
+                  :class="{ 'bg-ink-50 font-semibold': cat.id === categorieId }"
+                  @click="categorieId = cat.id as CategorieId; categorieDropdownOuvert = false"
+                >
+                  <span
+                    class="flex-shrink-0 w-10 h-10 m-1 rounded-xl overflow-hidden flex items-center justify-center"
+                    :class="cat.couleur"
+                  >
+                    <img v-if="cat.image" :src="cat.image" class="w-full h-full object-cover" alt="" />
+                    <span v-else class="font-bold text-sm" :class="cat.couleurTexte">{{ cat.nom[0].toUpperCase() }}</span>
+                  </span>
+                  <span class="text-sm text-ink-800">{{ cat.nom }}</span>
+                </li>
+              </ul>
+            </Transition>
+          </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="eyebrow mb-1.5 block" for="f-difficulte">Difficulté</label>
-            <select id="f-difficulte" v-model="difficulte" class="input">
-              <option value="debutant">Débutant</option>
-              <option value="intermediaire">Intermédiaire</option>
-              <option value="avance">Avancé</option>
-            </select>
-          </div>
-          <div>
-            <label class="eyebrow mb-1.5 block" for="f-duree">Durée</label>
-            <input id="f-duree" v-model="duree" type="text" placeholder="ex: 10 min" class="input" />
-          </div>
+        <div>
+          <label class="eyebrow mb-1.5 block" for="f-duree">Durée</label>
+          <input id="f-duree" v-model="duree" type="text" placeholder="ex: 10 min" class="input" />
         </div>
 
         <div>

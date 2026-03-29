@@ -97,11 +97,6 @@ svg:not(:root).svg-inline--fa { overflow: visible; }
   .badge-lavande { @apply bg-lavande-100 text-lavande-700; }
   .badge-peche   { @apply bg-peche-100 text-peche-700; }
   .badge-soleil  { @apply bg-soleil-100 text-soleil-700; }
-
-  /* ── Badges difficulté (remède detail) ── */
-  .badge-debutant      { @apply bg-mint-100 text-mint-700; }
-  .badge-intermediaire { @apply bg-soleil-100 text-soleil-700; }
-  .badge-avance        { @apply bg-peche-100 text-peche-700; }
 }
 
 /* ── Transitions de page ────────────────────────────────────────── */

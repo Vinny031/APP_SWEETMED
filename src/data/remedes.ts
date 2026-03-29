@@ -14,7 +14,6 @@ export const remedes: Remede[] = [
     categorieId: 'aromatherapie',
     tags: ['sommeil', 'insomnie', 'lavande', 'relaxation', 'stress', 'anxiété'],
     duree: 'Avant de dormir',
-    difficulte: 'debutant',
     ingredients: [
       'Huile essentielle de lavande vraie',
       'Huile végétale de jojoba (optionnel)',
@@ -43,7 +42,6 @@ export const remedes: Remede[] = [
     categorieId: 'aromatherapie',
     tags: ['concentration', 'menthe', 'travail', 'fatigue', 'clarté mentale'],
     duree: '5 min',
-    difficulte: 'debutant',
     ingredients: [
       'Huile essentielle de menthe poivrée',
       'Diffuseur ou mouchoir',
@@ -72,7 +70,6 @@ export const remedes: Remede[] = [
     categorieId: 'phytotherapie',
     tags: ['digestion', 'camomille', 'ballonnements', 'tisane', 'ventre', 'repas'],
     duree: '15 min',
-    difficulte: 'debutant',
     ingredients: [
       '2 cuillères à café de fleurs de camomille séchées',
       '250 ml d\'eau bouillante',
@@ -101,7 +98,6 @@ export const remedes: Remede[] = [
     categorieId: 'phytotherapie',
     tags: ['stress', 'anxiété', 'valériane', 'sommeil', 'nervosité', 'tension'],
     duree: '2 à 4 semaines',
-    difficulte: 'intermediaire',
     ingredients: [
       'Extrait sec de valériane (gélules 300–600mg)',
       'Ou tisane de racine séchée',
@@ -130,7 +126,6 @@ export const remedes: Remede[] = [
     categorieId: 'sophrologie',
     tags: ['respiration', 'anxiété', 'stress', 'calme', 'sophrologie', 'panique', 'urgence'],
     duree: '2 min',
-    difficulte: 'debutant',
     etapes: [
       'S\'asseoir confortablement, dos droit',
       'Expirer complètement par la bouche avec un "whoosh"',
@@ -155,7 +150,6 @@ export const remedes: Remede[] = [
     categorieId: 'sophrologie',
     tags: ['tensions', 'relaxation', 'corps', 'pleine conscience', 'sophrologie', 'mindfulness'],
     duree: '15 à 20 min',
-    difficulte: 'debutant',
     etapes: [
       'S\'allonger dans un endroit calme',
       'Fermer les yeux et respirer naturellement',
@@ -178,7 +172,6 @@ export const remedes: Remede[] = [
     categorieId: 'acupression',
     tags: ['acupression', 'maux de tête', 'calme', 'stress', 'front', 'insomnie', 'agitation'],
     duree: '3 à 5 min',
-    difficulte: 'debutant',
     etapes: [
       'Asseoir confortablement et fermer les yeux',
       'Localiser le point entre les deux sourcils',
@@ -198,7 +191,6 @@ export const remedes: Remede[] = [
     categorieId: 'acupression',
     tags: ['douleur', 'maux de tête', 'acupression', 'dentaire', 'tension', 'migraine'],
     duree: '3 à 5 min par côté',
-    difficulte: 'debutant',
     etapes: [
       'Pincer la membrane entre pouce et index avec l\'autre main',
       'Appliquer une pression ferme et soutenue',
@@ -222,7 +214,6 @@ export const remedes: Remede[] = [
     categorieId: 'nutrition',
     tags: ['curcuma', 'anti-inflammatoire', 'golden milk', 'articulations', 'immunité', 'soir'],
     duree: '5 min',
-    difficulte: 'debutant',
     ingredients: [
       '250 ml de lait végétal (amande, avoine ou coco)',
       '1 cuillère à café de curcuma en poudre',
@@ -253,7 +244,6 @@ export const remedes: Remede[] = [
     categorieId: 'premiers-secours',
     tags: ['piqûre', 'insecte', 'moustique', 'guêpe', 'démangeaison', 'urgence', 'bobo'],
     duree: '5 min',
-    difficulte: 'debutant',
     ingredients: [
       'Bicarbonate de soude',
       'Quelques gouttes d\'eau',
@@ -281,7 +271,6 @@ export const remedes: Remede[] = [
     categorieId: 'premiers-secours',
     tags: ['coupure', 'égratignure', 'plaie', 'cicatrisation', 'bobo', 'urgence'],
     duree: '5 min',
-    difficulte: 'debutant',
     ingredients: [
       'Eau froide courante',
       'Miel toutes fleurs pur',
@@ -309,7 +298,6 @@ export const remedes: Remede[] = [
     categorieId: 'premiers-secours',
     tags: ['brûlure', 'four', 'soleil', 'aloe vera', 'bobo', 'urgence', 'chaleur'],
     duree: '20 min',
-    difficulte: 'debutant',
     ingredients: [
       'Eau froide (robinet, pas glacée)',
       'Gel d\'aloe vera pur (feuille fraîche ou gel bio)',
@@ -337,7 +325,6 @@ export const remedes: Remede[] = [
     categorieId: 'premiers-secours',
     tags: ['mal de tête', 'migraine', 'céphalée', 'menthe', 'bobo', 'douleur', 'urgence'],
     duree: '5 min',
-    difficulte: 'debutant',
     ingredients: [
       'Huile essentielle de menthe poivrée',
     ],
@@ -364,7 +351,6 @@ export const remedes: Remede[] = [
     categorieId: 'premiers-secours',
     tags: ['nausée', 'mal des transports', 'estomac', 'gingembre', 'bobo', 'digestion'],
     duree: '5 min',
-    difficulte: 'debutant',
     ingredients: [
       'Gingembre frais (1 cm) ou tisane de gingembre',
     ],
@@ -387,7 +373,6 @@ export const remedes: Remede[] = [
     categorieId: 'premiers-secours',
     tags: ['bleu', 'hématome', 'choc', 'bosse', 'arnica', 'bobo', 'douleur'],
     duree: '10 min',
-    difficulte: 'debutant',
     ingredients: [
       'Glaçons dans un linge propre (ou poche de froid)',
       'Crème ou gel d\'arnica',
@@ -410,7 +395,6 @@ export const remedes: Remede[] = [
     categorieId: 'premiers-secours',
     tags: ['gorge', 'mal de gorge', 'miel', 'citron', 'sel', 'bobo', 'rhume'],
     duree: '10 min',
-    difficulte: 'debutant',
     ingredients: [
       '1/2 c. à café de sel fin',
       '1 verre d\'eau tiède',
@@ -436,7 +420,6 @@ export const remedes: Remede[] = [
     categorieId: 'premiers-secours',
     tags: ['crampe', 'mollet', 'muscle', 'sport', 'bobo', 'douleur', 'électrolytes'],
     duree: '5 min',
-    difficulte: 'debutant',
     ingredients: [
       'Jus de cornichon (2-3 gorgées)',
       'Eau chaude (bouillotte ou douche)',
@@ -462,7 +445,6 @@ export const remedes: Remede[] = [
     categorieId: 'meditation',
     tags: ['méditation', 'pleine conscience', 'pause', 'stress', 'présent', 'débutant', 'rapide'],
     duree: '5 min',
-    difficulte: 'debutant',
     etapes: [
       'Trouver une position confortable (assis ou allongé)',
       'Fermer les yeux ou regard posé à 45° sur le sol',

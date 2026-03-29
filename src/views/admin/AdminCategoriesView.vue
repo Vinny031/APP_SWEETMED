@@ -35,7 +35,7 @@ async function confirmerSuppr() {
   if (!confirmerSuppression.value) return
   const ok = await store.supprimerCategorie(confirmerSuppression.value)
   if (!ok) {
-    erreurSupp.value = 'Les catégories de base ne peuvent pas être supprimées. Vous pouvez seulement les modifier.'
+    erreurSupp.value = 'Impossible de supprimer cette catégorie.'
   }
   confirmerSuppression.value = null
 }

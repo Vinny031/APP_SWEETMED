@@ -7,7 +7,8 @@
 import type { Categorie } from '@/types'
 import { categories as categoriesMock } from '@/data/categories'
 
-const CUSTOM_KEY = 'sweetmed_categories_custom'
+const CUSTOM_KEY   = 'sweetmed_categories_custom'
+const DELETED_KEY  = 'sweetmed_categories_deleted'
 
 // ── Helpers localStorage (privés) ────────────────────────────────
 function _loadCustom(): Categorie[] {
@@ -21,13 +22,31 @@ function _saveCustom(cats: Categorie[]): void {
   localStorage.setItem(CUSTOM_KEY, JSON.stringify(cats))
 }
 
+function _loadDeleted(): string[] {
+  try {
+    const raw = localStorage.getItem(DELETED_KEY)
+    return raw ? (JSON.parse(raw) as string[]) : []
+  } catch { return [] }
+}
+
+function _addDeleted(id: string): void {
+  const deleted = _loadDeleted()
+  if (!deleted.includes(id)) {
+    localStorage.setItem(DELETED_KEY, JSON.stringify([...deleted, id]))
+  }
+}
+
 // ── API publique ─────────────────────────────────────────────────
 
 /** Retourne toutes les catégories (mock filtrées + custom fusionnées). */
 async function getAll(): Promise<Categorie[]> {
-  const custom = _loadCustom()
+  const custom  = _loadCustom()
+  const deleted = _loadDeleted()
   // Les catégories custom écrasent les mocks du même id (édition d'un mock)
-  const mockFiltres = categoriesMock.filter(m => !custom.some(c => c.id === m.id))
+  // Les mocks supprimés par l'admin sont exclus
+  const mockFiltres = categoriesMock.filter(m =>
+    !custom.some(c => c.id === m.id) && !deleted.includes(m.id)
+  )
   return [...mockFiltres, ...custom]
 }
 
@@ -75,14 +94,24 @@ async function update(id: string, patch: Partial<Categorie>): Promise<Categorie 
 }
 
 /**
- * Supprime une catégorie custom.
- * Les catégories mock ne peuvent pas être supprimées (retourne false).
+ * Supprime une catégorie.
+ * - Custom : retirée du localStorage custom.
+ * - Mock : ajoutée à la liste noire pour être exclue de getAll().
  */
 async function remove(id: string): Promise<boolean> {
-  const custom = _loadCustom()
+  const custom  = _loadCustom()
   const filtres = custom.filter(c => c.id !== id)
-  if (filtres.length === custom.length) return false
-  _saveCustom(filtres)
+
+  if (filtres.length < custom.length) {
+    // Catégorie custom supprimée
+    _saveCustom(filtres)
+    return true
+  }
+
+  // Catégorie mock : vérifier qu'elle existe avant de la blacklister
+  const estUnMock = categoriesMock.some(c => c.id === id)
+  if (!estUnMock) return false
+  _addDeleted(id)
   return true
 }
 

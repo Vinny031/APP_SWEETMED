@@ -151,7 +151,7 @@ async function soumettre() {
       <!-- Bouton soumettre -->
       <button
         class="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm text-white
-               bg-mint-500 transition-all duration-200 active:scale-[0.97] min-h-[52px] shadow-btn-mint
+               bg-mint-600 transition-all duration-200 active:scale-[0.97] min-h-[52px] shadow-btn-mint
                disabled:opacity-60 disabled:cursor-not-allowed"
         :disabled="authStore.chargement"
         @click="soumettre"

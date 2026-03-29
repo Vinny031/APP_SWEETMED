@@ -47,7 +47,7 @@ async function soumettre() {
       <h1 class="font-display font-bold text-ink-800 text-2xl tracking-tight">
         SWEET MED
       </h1>
-      <p class="text-ink-500 text-sm mt-1.5">Médecine douce, au quotidien</p>
+      <p class="text-ink-700 text-sm mt-1.5">Médecine douce, au quotidien</p>
     </header>
 
     <!-- ══ Contenu ═════════════════════════════════════════════════ -->
@@ -57,14 +57,14 @@ async function soumettre() {
       <div class="flex bg-ink-50 rounded-2xl p-1 gap-1">
         <button
           class="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200"
-          :class="mode === 'login' ? 'bg-white text-ink-800 shadow-sm' : 'text-ink-400'"
+          :class="mode === 'login' ? 'bg-white text-ink-800 shadow-sm' : 'text-ink-600'"
           @click="basculerMode('login')"
         >
           Se connecter
         </button>
         <button
           class="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200"
-          :class="mode === 'register' ? 'bg-white text-ink-800 shadow-sm' : 'text-ink-400'"
+          :class="mode === 'register' ? 'bg-white text-ink-800 shadow-sm' : 'text-ink-600'"
           @click="basculerMode('register')"
         >
           Créer un compte
@@ -163,7 +163,7 @@ async function soumettre() {
       </button>
 
       <!-- Disclaimer -->
-      <p class="text-center text-xs text-ink-400 leading-relaxed px-4">
+      <p class="text-center text-xs text-ink-600 leading-relaxed px-4">
         SWEET MED est une application d'information sur la médecine douce.<br>
         Elle ne remplace pas l'avis d'un professionnel de santé.
       </p>

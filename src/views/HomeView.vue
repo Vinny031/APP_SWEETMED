@@ -5,12 +5,16 @@ import { useMedecineStore } from '@/stores/useMedecineStore'
 import HomeHero        from '@/components/HomeHero.vue'
 import HomeSuggestions from '@/components/HomeSuggestions.vue'
 import HomeThematiques from '@/components/HomeThematiques.vue'
+import HomeBobos       from '@/components/HomeBobos.vue'
 import RemèdeCard      from '@/components/RemèdeCard.vue'
 import type { Remede } from '@/types'
 
 const router  = useRouter()
 const store   = useMedecineStore()
-const remedes6 = computed(() => store.remedes.slice(0, 6))
+// 3 remèdes hors premiers-secours — échantillon vitrine catalogue
+const remedes3 = computed(() =>
+  store.remedes.filter(r => r.categorieId !== 'premiers-secours').slice(0, 3)
+)
 
 function voirRemede(r: Remede) { router.push(`/remede/${r.id}`) }
 </script>
@@ -25,6 +29,8 @@ function voirRemede(r: Remede) { router.push(`/remede/${r.id}`) }
       <HomeSuggestions />
 
       <HomeThematiques />
+
+      <HomeBobos />
 
       <!-- ── À découvrir ───────────────────────────────────────── -->
       <section aria-labelledby="h-discover">
@@ -43,7 +49,7 @@ function voirRemede(r: Remede) { router.push(`/remede/${r.id}`) }
         </div>
         <div class="space-y-3">
           <RemèdeCard
-            v-for="(r, i) in remedes6" :key="r.id"
+            v-for="(r, i) in remedes3" :key="r.id"
             :remede="r" compact
             class="animate-in" :style="{ animationDelay: `${i * 45}ms` }"
             @click="voirRemede"

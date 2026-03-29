@@ -86,4 +86,14 @@ export const categories: Categorie[] = [
     icone: 'droplet',
     emoji: '💧',
   },
+  {
+    id: 'premiers-secours',
+    nom: 'Premiers secours',
+    description: 'Astuces de grand-mère pour les petits bobos du quotidien',
+    couleur: 'bg-peche-100',
+    couleurTexte: 'text-peche-700',
+    icone: 'kit-medical',
+    emoji: '🩹',
+    image: `${base}icons/icon_bobos.webp`,
+  },
 ]

@@ -16,6 +16,7 @@ export type CategorieIdMock =
   | 'meditation'
   | 'ayurveda'
   | 'homeopathie'
+  | 'premiers-secours'
 
 /** IDs des catégories mock + IDs dynamiques des catégories custom (préfixe "cat-") */
 export type CategorieId = CategorieIdMock | (string & {})
